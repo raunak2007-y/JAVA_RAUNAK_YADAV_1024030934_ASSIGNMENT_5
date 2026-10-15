@@ -1,0 +1,25 @@
+import java.util.Optional;
+
+public class StudentEmailOptional {
+
+    public static void main(String[] args) {
+        Optional<String> activeEmail = Optional.of("student.name@university.edu");
+        Optional<String> emptyEmail = Optional.empty();
+
+        System.out.print("3. ifPresent() check: ");
+        activeEmail.ifPresent(email -> System.out.println("Email found -> " + email));
+
+        String fallbackEmail = emptyEmail.orElse("default.student@university.edu");
+        System.out.println("4. orElse() fallback: " + fallbackEmail);
+
+        System.out.print("5. orElseThrow() validation: ");
+        try {
+            String validationResult = emptyEmail.orElseThrow(() -> 
+                new IllegalArgumentException("Error: Student email record is missing completely!")
+            );
+            System.out.println(validationResult);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Caught Expected Exception -> " + e.getMessage());
+        }
+    }
+}
