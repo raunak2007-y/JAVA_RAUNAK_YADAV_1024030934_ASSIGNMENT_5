@@ -1,0 +1,73 @@
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
+
+public class EventManager {
+
+    private String eventName;
+    private LocalDate eventDate;
+    private LocalTime startTime;
+    private Optional<String> venue;
+
+    public EventManager(String eventName, LocalDate eventDate, LocalTime startTime, String venue) {
+        this.eventName = eventName;
+        this.eventDate = eventDate;
+        this.startTime = startTime;
+        this.venue = Optional.ofNullable(venue);
+    }
+
+    public void displayEventDetails() {
+        System.out.println("Event Name: " + eventName);
+        System.out.println("Event Date: " + eventDate);
+        System.out.println("Start Time: " + startTime);
+        System.out.println("Venue: " + venue.orElse("Venue not specified"));
+    }
+
+    public void checkTimeline() {
+        LocalDate today = LocalDate.now();
+        if (eventDate.isAfter(today)) {
+            System.out.println("Timeline Status: Future Event");
+        } else if (eventDate.isBefore(today)) {
+            System.out.println("Timeline Status: Past Event");
+        } else {
+            System.out.println("Timeline Status: Today");
+        }
+    }
+
+    public void displayDaysRemaining() {
+        LocalDate today = LocalDate.now();
+        long days = ChronoUnit.DAYS.between(today, eventDate);
+        if (days > 0) {
+            System.out.println("Days Remaining: " + days + " days");
+        } else if (days < 0) {
+            System.out.println("Days Since Event: " + Math.abs(days) + " days ago");
+        } else {
+            System.out.println("Days Remaining: 0 (Happening today!)");
+        }
+    }
+
+    public LocalTime calculateEndTime(int durationHours) {
+        return startTime.plusHours(durationHours);
+    }
+
+    public static void main(String[] args) {
+        LocalDate futureDate = LocalDate.now().plusDays(5);
+        LocalTime time = LocalTime.of(14, 30);
+
+        System.out.println("--- Test Case 1: Event with Venue ---");
+        EventManager event1 = new EventManager("Tech Conference", futureDate, time, "Main Auditorium");
+        event1.displayEventDetails();
+        event1.checkTimeline();
+        event1.displayDaysRemaining();
+        System.out.println("End Time (2 hours duration): " + event1.calculateEndTime(2));
+        System.out.println();
+
+        System.out.println("--- Test Case 2: Event without Venue ---");
+        EventManager event2 = new EventManager("Study Group Meeting", LocalDate.now(), LocalTime.of(10, 0), null);
+        event2.displayEventDetails();
+        event2.checkTimeline();
+        event2.displayDaysRemaining();
+        System.out.println("End Time (2 hours duration): " + event2.calculateEndTime(2));
+    }
+}
