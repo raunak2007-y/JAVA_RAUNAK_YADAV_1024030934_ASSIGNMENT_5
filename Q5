@@ -1,0 +1,47 @@
+import java.util.Objects;
+import java.util.Optional;
+
+public class GenericUtility {
+
+    public static <T> boolean isEqual(T a, T b) {
+        return Objects.equals(a, b);
+    }
+
+    public static <T> T getDefault(Optional<T> value, T defaultValue) {
+        return value.orElse(defaultValue);
+    }
+
+    public static <T extends Comparable<T>> T max(T a, T b) {
+        if (a == null && b == null) return null;
+        if (a == null) return b;
+        if (b == null) return a;
+        return (a.compareTo(b) >= 0) ? a : b;
+    }
+
+    public static boolean isNull(Object obj) {
+        return Objects.isNull(obj);
+    }
+
+    public static void main(String[] args) {
+        System.out.println("--- Testing isEqual ---");
+        System.out.println("Strings matching: " + isEqual("Java", "Java"));
+        System.out.println("Strings mismatched: " + isEqual("Java", "Python"));
+        System.out.println("Integers matching: " + isEqual(100, 100));
+
+        System.out.println("\n--- Testing getDefault ---");
+        Optional<String> presentOpt = Optional.of("Active Session");
+        Optional<String> emptyOpt = Optional.empty();
+        System.out.println("Present optional value: " + getDefault(presentOpt, "Fallback"));
+        System.out.println("Empty optional fallback: " + getDefault(emptyOpt, "Fallback"));
+
+        System.out.println("\n--- Testing max ---");
+        System.out.println("Max of 45 and 82: " + max(45, 82));
+        System.out.println("Max of 'Apple' and 'Banana': " + max("Apple", "Banana"));
+
+        System.out.println("\n--- Testing isNull ---");
+        String regularObj = "Hello";
+        String nullObj = null;
+        System.out.println("Is regularObj null?: " + isNull(regularObj));
+        System.out.println("Is nullObj null?: " + isNull(nullObj));
+    }
+}
