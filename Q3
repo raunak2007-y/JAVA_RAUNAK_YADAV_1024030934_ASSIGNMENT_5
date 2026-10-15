@@ -1,0 +1,52 @@
+import java.util.Objects;
+import java.util.Optional;
+
+public class Result<T extends Number> {
+
+    private final T marks;
+    private final double maxMarks;
+
+    public Result(T marks, double maxMarks) {
+        this.marks = Objects.requireNonNull(marks, "Marks cannot be null");
+        if (maxMarks <= 0) {
+            throw new IllegalArgumentException("Maximum marks must be greater than zero");
+        }
+        this.maxMarks = maxMarks;
+    }
+
+    public double calculatePercentage() {
+        return (marks.doubleValue() / maxMarks) * 100;
+    }
+
+    public boolean isPassed(double thresholdPercentage) {
+        return calculatePercentage() >= thresholdPercentage;
+    }
+
+    public Optional<T> getMarksOptional() {
+        return Optional.of(marks);
+    }
+
+    public static void main(String[] args) {
+        Result<Integer> intResult = new Result<>(85, 100);
+        System.out.println("Percentage: " + intResult.calculatePercentage() + "%");
+        System.out.println("Passed (Threshold 40%): " + intResult.isPassed(40.0));
+        
+        Optional<Integer> intMarksOpt = intResult.getMarksOptional();
+        intMarksOpt.ifPresent(m -> System.out.println("Available Marks: " + m));
+        System.out.println();
+
+        Result<Double> doubleResult = new Result<>(35.5, 100.0);
+        System.out.println("Percentage: " + doubleResult.calculatePercentage() + "%");
+        System.out.println("Passed (Threshold 40%): " + doubleResult.isPassed(40.0));
+        
+        Optional<Double> doubleMarksOpt = doubleResult.getMarksOptional();
+        doubleMarksOpt.ifPresent(m -> System.out.println("Available Marks: " + m));
+        System.out.println();
+
+        try {
+            new Result<Integer>(null, 100);
+        } catch (NullPointerException e) {
+            System.out.println("Validation Error caught: " + e.getMessage());
+        }
+    }
+}
